@@ -4,6 +4,8 @@ import { GetProductsSchema } from "../dtos/posts/getPosts.dto";
 import { Request, Response } from "express";
 import { BaseError } from "../errors/BaseError";
 import { CreateProductSchema } from "../dtos/posts/createPosts.dto";
+import { EditPostSchema } from "../dtos/posts/editPosts.dto";
+import { DeletePostsSchema } from "../dtos/posts/deletePost.dto";
 
 export class postsControlle {
   constructor(private postsBusiness: PostsBusiness) {}
@@ -33,16 +35,60 @@ export class postsControlle {
   public createPosts = async (req: Request, res: Response) => {
     try {
       const input = CreateProductSchema.parse({
-        nameCreator: req.body.nameCreator,
         content: req.body.content,
         token: req.headers.authorization,
       });
 
-      console.log(input)
-
       const output = await this.postsBusiness.createPost(input);
 
       res.status(201).send(output);
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof ZodError) {
+        res.status(400).send(error.issues);
+      } else if (error instanceof BaseError) {
+        res.status(error.statusCode).send(error.message);
+      } else {
+        res.status(500).send("Erro inesperado");
+      }
+    }
+  };
+
+  public editPosts = async (req: Request, res: Response) => {
+    try {
+      const input = EditPostSchema.parse({
+        id: req.params.id,
+        content: req.body.content,
+        token: req.headers.authorization,
+      });
+
+      const output = await this.postsBusiness.editPost(input);
+
+      res.status(200).send(output);
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof ZodError) {
+        res.status(400).send(error.issues);
+      } else if (error instanceof BaseError) {
+        res.status(error.statusCode).send(error.message);
+      } else {
+        res.status(500).send("Erro inesperado");
+      }
+    }
+  };
+
+  public deletePost = async (req: Request, res: Response) => {
+    try {
+      const input = DeletePostsSchema.parse({
+        id: req.params.id,
+        token: req.headers.authorization,
+      });
+
+      const output = await this.postsBusiness.deletePost(input)
+
+      res.status(200).send(output)
     } catch (error) {
       console.log(error);
 

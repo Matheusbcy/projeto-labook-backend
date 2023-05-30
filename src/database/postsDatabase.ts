@@ -53,4 +53,32 @@ export class PostsDataBase extends BaseDatabase {
       throw new BadRequestError("User not found");
     }
   };
+
+  public findPostById = async (id: string): Promise<postsDB | undefined> => {
+    const [postsDB]: postsDB[] | undefined = await BaseDatabase.connection(
+      PostsDataBase.POST_TABLE
+    ).where({ id });
+
+    return postsDB;
+  };
+
+  public updatePost = async (id: string, updatedPost: postsDB) => {
+    await BaseDatabase.connection(PostsDataBase.POST_TABLE)
+      .update(updatedPost)
+      .where({ id });
+  };
+
+  public getPostToDelete = async (id: string) => {
+    const [postsDB]: postsDB[] | undefined = await BaseDatabase.connection(
+      PostsDataBase.POST_TABLE
+    ).where({ id });
+
+    return postsDB;
+  };
+
+  public deletePostsData = async (id: string) => {
+    await BaseDatabase.connection(PostsDataBase.POST_TABLE)
+      .delete()
+      .where({ id });
+  };
 }
