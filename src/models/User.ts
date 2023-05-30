@@ -12,7 +12,6 @@ export interface UserDB {
   created_at: string
 }
 
-// é o modelo de User que o front receberá (sem password e createdAt camelCase)
 export interface UserModel {
   id: string,
   name: string,
@@ -79,7 +78,6 @@ export class User {
         this.createdAt = value
     }
 
-    // para facilitar nossa vida, temos o método que gera um UserDB
     public toDBModel(): UserDB {
         return {
             id: this.id,
@@ -90,8 +88,7 @@ export class User {
             created_at: this.createdAt
         }
     }
-
-    // para facilitar nossa vida, temos o método que gera um UserModel
+    
     public toBusinessModel(): UserModel {
         return {
             id: this.id,

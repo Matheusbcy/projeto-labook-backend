@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
-import { productRouter } from "./router/productRouter";
 import { userRouter } from "./router/userRouter";
 
 import dotenv from "dotenv";
+import { postsRouter } from "./router/postsRouter";
 dotenv.config();
 
 const app = express();
@@ -16,4 +16,4 @@ app.listen(process.env.PORT || 3003, () => {
 });
 
 app.use("/users", userRouter);
-app.use("/products", productRouter);
+app.use("/posts", postsRouter)
