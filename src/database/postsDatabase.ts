@@ -5,6 +5,7 @@ import { BaseDatabase } from "./BaseDatabase";
 export class PostsDataBase extends BaseDatabase {
   public static POST_TABLE = "posts";
   public static USER_TABLE = "users";
+  public static LIKE_DISLIKE = "likes_dislikes";
 
   public findPosts = async () => {
     const result: postsDB[] = await BaseDatabase.connection(
@@ -80,5 +81,68 @@ export class PostsDataBase extends BaseDatabase {
     await BaseDatabase.connection(PostsDataBase.POST_TABLE)
       .delete()
       .where({ id });
+  };
+
+  // --------------------------------------------------------------------
+
+  public findLikeDislikeByUserAndPost = async (
+    user_id: string,
+    post_id: string
+  ) => {
+    return await BaseDatabase.connection(PostsDataBase.LIKE_DISLIKE)
+      .where("user_id", user_id)
+      .where("post_id", post_id)
+      .first();
+  };
+
+  public deleteLikeDislike = async (likeDislikeId: string) => {
+    await BaseDatabase.connection(PostsDataBase.LIKE_DISLIKE)
+      .where({ user_id: likeDislikeId })
+      .delete();
+  };
+
+  public createLikeDislike = async (
+    user_id: string,
+    post_id: string,
+    like: boolean
+  ) => {
+    return await BaseDatabase.connection(PostsDataBase.LIKE_DISLIKE).insert({
+      user_id,
+      post_id,
+      like: like ? 1 : 0,
+    });
+  };
+
+  public updateLikeDislike = async (
+    likeDislikeId: string,
+    likeValue: boolean
+  ) => {
+    const likeDislike = likeValue ? 1 : 0;
+
+    await BaseDatabase.connection(PostsDataBase.LIKE_DISLIKE)
+      .where({ user_id: likeDislikeId })
+      .update({ like: likeDislike });
+  };
+
+  public updateLikes = async (post_id: string, likes: number) => {
+    return await BaseDatabase.connection(PostsDataBase.POST_TABLE)
+      .where("id", post_id)
+      .update({ likes });
+  };
+
+  public updateDislikes = async (post_id: string, dislikes: number) => {
+    return await BaseDatabase.connection(PostsDataBase.POST_TABLE)
+      .where("id", post_id)
+      .update({ deslikes: dislikes });
+  };
+
+  public updateLikesAndDislikes = async (
+    post_id: string,
+    likes: number,
+    dislikes: number
+  ) => {
+    return await BaseDatabase.connection(PostsDataBase.POST_TABLE)
+      .where("id", post_id)
+      .update({ likes, deslikes: dislikes });
   };
 }

@@ -31,7 +31,7 @@ export class Posts {
     private likes: number,
     private deslikes: number,
     private createdAt: string,
-    private updatedAt: string
+    private updatedAt: string,
   ) {}
 
   public getId(): string {
@@ -112,7 +112,7 @@ export class Posts {
       updatedAt: this.updatedAt,
       creator: {
         creatorId: this.creatorId,
-        name: null, // O nome será atribuído posteriormente ao mapear os posts
+        name: null,
       }
     };
   }

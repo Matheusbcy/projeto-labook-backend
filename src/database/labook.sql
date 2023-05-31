@@ -30,3 +30,9 @@ CREATE TABLE
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (post_id) REFERENCES posts(id)
     );
+
+
+    SELECT * FROM likes_dislikes;
+
+    DELETE FROM users
+WHERE id = 'f0dfb36a-08d3-41b2-8b18-6e68fa7d67d6';

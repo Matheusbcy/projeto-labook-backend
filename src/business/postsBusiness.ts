@@ -20,6 +20,10 @@ import {
   DeletePostsInputDTO,
   DeletePostsOutputDTO,
 } from "../dtos/posts/deletePost.dto";
+import {
+  EditLikeInputDTO,
+  EditLikeOutputDTO,
+} from "../dtos/posts/editLike.dto";
 
 export class PostsBusiness {
   constructor(
@@ -118,7 +122,9 @@ export class PostsBusiness {
     return output;
   };
 
-  public editPost = async (input: EditPostsInputDTO) => {
+  public editPost = async (
+    input: EditPostsInputDTO
+  ): Promise<EditPostsOutputDTO> => {
     const { id, content, token } = input;
 
     const payload = this.tokenManager.getPayload(token);
@@ -169,7 +175,9 @@ export class PostsBusiness {
     return output;
   };
 
-  public deletePost = async (input: DeletePostsInputDTO) => {
+  public deletePost = async (
+    input: DeletePostsInputDTO
+  ): Promise<DeletePostsOutputDTO> => {
     const { id, token } = input;
 
     const payload = this.tokenManager.getPayload(token);
@@ -195,6 +203,80 @@ export class PostsBusiness {
     const output: DeletePostsOutputDTO = {
       message: "Post deleted",
     };
+    return output;
+  };
+
+  public likeDislike = async (
+    input: EditLikeInputDTO
+  ): Promise<EditLikeOutputDTO> => {
+    const { id, like, token } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new BadRequestError("Token is invalid");
+    }
+
+    const postDB = await this.postsDatabase.findPostById(id);
+
+    if (!postDB) {
+      throw new BadRequestError("Post not exists.");
+    }
+
+    if (postDB?.creator_id === payload.id) {
+      throw new BadRequestError("Você não pode curtir o proprio post");
+    }
+
+    const existingLikeDislike =
+      await this.postsDatabase.findLikeDislikeByUserAndPost(payload.id, id);
+
+    if (existingLikeDislike) {
+      if (like && existingLikeDislike.like) {
+        await this.postsDatabase.deleteLikeDislike(existingLikeDislike.user_id);
+
+        await this.postsDatabase.updateLikes(postDB.id, postDB.likes - 1);
+      } else if (!like && !existingLikeDislike.like) {
+        await this.postsDatabase.deleteLikeDislike(existingLikeDislike.user_id);
+
+        await this.postsDatabase.updateDislikes(postDB.id, postDB.deslikes - 1);
+      } else if (like && !existingLikeDislike.like) {
+        await this.postsDatabase.updateLikeDislike(
+          existingLikeDislike.user_id,
+          like
+        );
+
+        await this.postsDatabase.updateLikesAndDislikes(
+          postDB.id,
+          postDB.likes + 1,
+          postDB.deslikes - 1
+        );
+      } else if (!like && existingLikeDislike.like) {
+        await this.postsDatabase.updateLikeDislike(
+          existingLikeDislike.user_id,
+          like
+        );
+
+        await this.postsDatabase.updateLikesAndDislikes(
+          postDB.id,
+          postDB.likes - 1,
+          postDB.deslikes + 1
+        );
+      }
+    } else {
+      await this.postsDatabase.createLikeDislike(payload.id, id, like);
+
+      if (like) {
+        await this.postsDatabase.updateLikes(postDB.id, postDB.likes + 1);
+      } else {
+        await this.postsDatabase.updateDislikes(postDB.id, postDB.deslikes + 1);
+      }
+    }
+    const output: EditLikeOutputDTO = {
+      message: like
+        ? "Seu like foi computado com sucesso"
+        : "Seu dislike foi computado com sucesso",
+    };
+
     return output;
   };
 }

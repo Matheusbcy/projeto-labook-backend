@@ -1,6 +1,5 @@
 import { Request, Response } from "express"
 import { UserBusiness } from "../business/UserBusiness"
-import { GetUsersSchema } from "../dtos/user/getUsers.dto"
 import { ZodError } from "zod"
 import { BaseError } from "../errors/BaseError"
 import { LoginSchema } from "../dtos/user/login.dto"
@@ -11,7 +10,7 @@ export class UserController {
     private userBusiness: UserBusiness
   ) { }
 
-  //ja está feito
+
   public signup = async (req: Request, res: Response) => {
     try {
       const input = SignupSchema.parse({
@@ -35,7 +34,7 @@ export class UserController {
       }
     }
   }
-  // ja está feito
+
   public login = async (req: Request, res: Response) => {
     try {
       const input = LoginSchema.parse({
