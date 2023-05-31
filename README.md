@@ -71,4 +71,6 @@ Para obter mais detalhes sobre a API do Labook e os endpoints disponíveis, cons
 
 ## Contribuição  
 
-Contribuições são bem-vindas! Se você deseja contribuir para o projeto Labook, sinta-se à vontade para abrir issues relatando problemas, enviar pull requests com melhorias ou novas funcionalidades, e participar ativamente da comunidade.  
+Contribuições são bem-vindas! Se você deseja contribuir para o projeto Labook, sinta-se à vontade para abrir issues relatando problemas, enviar pull requests com melhorias ou novas funcionalidades, e participar ativamente da comunidade.
+
+Criando pull para correção
