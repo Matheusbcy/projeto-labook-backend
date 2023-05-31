@@ -140,7 +140,7 @@ export class PostsBusiness {
     }
 
     if (payload.id !== postToEditDB.creator_id) {
-      throw new BadRequestError("Esse usuario não possui esse post");
+      throw new BadRequestError("Esse usuario não pode editar esse post");
     }
 
     const post = new Posts(
