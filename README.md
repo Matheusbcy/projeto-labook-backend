@@ -7,7 +7,8 @@ Labook é um back-end de rede social que tem como objetivo promover a conexão e
 * Funcionalidades  
 * Tecnologias  
 * Como Começar  
-* Documentação da API  
+* Documentação da API 
+* Contribuição 
 
 ## Funcionalidades  
 
@@ -39,13 +40,14 @@ Para começar com o Labook, siga estes passos:
 1. Clone o repositório:  
 
 ```
-git clone https://github.com/seu-usuário/labook.git
-
+git clone https://github.com/seu-usuário/projeto-labook-backend
+.git
 ```
 2. instale as dependências:  
 
 ```
 # Navegue até o diretório do backend
+
 cd projeto-labook-backend
 npm install
 ```
@@ -59,7 +61,7 @@ npm install
 * Para o backend, execute o seguinte comando:
 
 ```
-npm start
+npm run dev
 ```
 Isso iniciará o servidor de desenvolvimento backend que estará disponivel em `http://localhost:3003` ou o localhost da sua escolha.
 
